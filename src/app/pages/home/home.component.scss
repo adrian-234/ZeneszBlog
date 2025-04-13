@@ -1,0 +1,47 @@
+.searchbar-form {
+    width: fit-content;
+
+    display: flex;
+    align-items: center;
+
+    margin: 40px auto;
+    padding: 10px 5px;
+
+    border: 1px solid grey;
+    border-radius: 4px;
+}
+
+.searchbar-form input {
+    width: 250px;
+
+    border: none;
+    outline: none;
+
+    margin: 0;
+
+    font-size: 22px;
+}
+
+.searchbar-form mat-icon {
+    cursor: pointer;
+    padding: 0 10px;
+
+    border-left: 1px solid grey;
+}
+
+mat-divider {
+    margin: 8px 25px;
+}
+
+mat-card:not(.main) {
+    background-color: inherit;
+
+    margin: 20px 0;
+
+    cursor: pointer;
+}
+
+mat-card-content {
+    margin: 0 10px;
+}
+

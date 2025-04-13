@@ -1,0 +1,42 @@
+mat-card:not(.main) {
+    background-color: inherit;
+
+    margin: 20px 0;
+
+    cursor: pointer;
+}
+
+mat-divider {
+    margin: 8px 25px;
+}
+
+mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+mat-card-title {
+    font-weight: 500;
+}
+
+mat-card-header button {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+mat-card-content {
+    margin: 0 10px;
+}
+
+.posts {
+    display: flex;
+    justify-content: space-between;
+}
+
+h1 {
+    margin: 50px auto;
+
+    width: fit-content;
+}

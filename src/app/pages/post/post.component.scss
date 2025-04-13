@@ -1,0 +1,41 @@
+h1 {
+    width: fit-content;
+
+    margin: 50px auto;
+}
+
+h2 {
+    margin: 15px 0 8px; 
+
+    font-weight: 500;
+}
+
+h4 {
+    margin: 0 auto 0 8px;
+
+    font-weight: 400;
+}
+
+mat-card-header {
+    flex-direction: column;
+}
+
+mat-divider {
+    margin: 8px 25px;
+}
+
+mat-card-content {
+    margin: 0 10px;
+}
+
+
+mat-expansion-panel {
+    background-color: #c5c5c5 !important;
+
+    color: black;
+}
+
+mat-panel-title {
+    color: black !important;
+
+}

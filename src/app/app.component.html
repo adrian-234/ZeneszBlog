@@ -1,0 +1,11 @@
+<mat-toolbar id="header">
+    <a routerLink="/home" id="title">Zene sarok</a>
+    @if (isLoggedIn) {
+        <a routerLink="/profile"><mat-icon>account_circle</mat-icon></a>
+    }
+      
+    @if (!isLoggedIn) {
+      <span><a routerLink="/login">Bejelentkezés</a> / <a routerLink="/signup">Regisztrálás</a></span>
+    }
+</mat-toolbar>
+<router-outlet/>

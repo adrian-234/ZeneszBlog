@@ -1,0 +1,28 @@
+<div class="login-container">
+    <h1>Bejelentkezés</h1>
+     
+
+        <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">    
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email">
+                <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline">
+                <mat-label>Jelszó</mat-label>
+                <input matInput type="password" formControlName="password">
+                <mat-icon matSuffix>lock</mat-icon>
+            </mat-form-field>
+
+            @if (loginError) {
+                <p class="error">Hibás jelszó vagy email.</p>
+            }
+    
+            <div class="buttons-row">
+                <button mat-flat-button color="primary" type="submit">Belépés</button>
+                <p>Ha még nincs fiokod, akkor itt tudsz regisztrálni:</p>
+                <button mat-button [routerLink]="['/signup']">Regisztrálás</button>
+            </div>
+        </form>
+</div>

@@ -1,0 +1,35 @@
+.login-container {
+    box-sizing: border-box;
+    width: fit-content;
+
+    margin: 30px auto 0;
+    padding: 30px 80px;
+
+    text-align: center;
+
+    background-color: hsl(180, 80%, 95%);
+
+    box-shadow: 0px 3px 10px 0px rgb(214, 214, 214);
+}
+
+#login-container h1 {
+    margin-top: 0;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buttons-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-top: 20px;
+}
+
+input, mat-label, mat-icon{
+    color: #474448 !important;
+}

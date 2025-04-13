@@ -1,0 +1,26 @@
+h1 {
+    margin: 50px auto;
+
+    width: fit-content;
+}
+
+input, mat-label, mat-icon{
+    color: #474448 !important;
+}
+
+.profile-info-form {
+    display: flex;
+    flex-direction: column;
+
+    width: 300px;
+
+    margin: auto;
+}
+
+mat-card-content {
+    text-align: center;
+}
+
+.logoutBtn {
+    margin: 15px auto;
+}
