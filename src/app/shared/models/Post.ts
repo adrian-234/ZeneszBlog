@@ -1,8 +1,9 @@
 export interface Post {
-    id: number,
+    id: string,
     title: string,
     text: string;
-    author: number;
-    comments: number[];
+    author: string;
+    comments: string[];
+    comment_count: number;
     date: string
 }

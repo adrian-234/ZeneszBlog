@@ -1,28 +1,43 @@
-<h1>{{currentGroup.name}}</h1>
+@if(loaded) {
+    <h1>{{currentGroup.name}}</h1>
+    
+    <mat-card class="main">
+        <mat-card-header>
+            <mat-card-title>Cikkek:</mat-card-title>
+            @if (isLoggedIn && currentUser) {
+                @if (currentUser.role == "writer") {
+                    <button mat-flat-button (click)="newPost()"><mat-icon>edit_note</mat-icon>Új cikk írása</button>
+                }
+                @if (currentUser.groups.includes(currentGroup.id)) {
+                    <button mat-flat-button (click)="unfollow()"><mat-icon>remove</mat-icon>Kikövetés</button>
+                } @else {
+                    <button mat-flat-button (click)="follow()"><mat-icon>add</mat-icon>Követés</button>
+                }
+            }
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+            @for (post of posts; track $index) {
+                <mat-card appearance="raised" (click)="redirect(post.id)">
+                    <mat-card-content class="posts">
+                        <span>{{post.title}}</span>
+                        <span>
+                            @if (currentUser?.role == "writer") {
+                                {{post.date | formDate}}
+                                <mat-icon (click)="edit(post.id); $event.stopPropagation()" class="icon-btn" id="special-one">edit</mat-icon>
+                                <mat-icon (click)="delete(post.id); $event.stopPropagation()" class="icon-btn">delete</mat-icon>
+                            }
+                        </span>
+                    </mat-card-content>
+                </mat-card>
+            }
+        </mat-card-content>
+    </mat-card>
+} @else {
+    <div class="loading-container">
+        <h2>Betöltés folyamatban</h2>
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Kérem várjon...</p>
+    </div>
+}
 
-<mat-card class="main">
-    <mat-card-header>
-        <mat-card-title>Cikkek:</mat-card-title>
-        @if (isLoggedIn) {
-            @if (currentUser.role == "writer") {
-                <button mat-flat-button (click)="newPost()"><mat-icon>edit_note</mat-icon>Új cikk írása</button>
-            }
-            @if (currentUser.groups.includes(currentGroup.id)) {
-                <button mat-flat-button (click)="unfollow()"><mat-icon>remove</mat-icon>Kikövetés</button>
-            } @else {
-                <button mat-flat-button (click)="follow()"><mat-icon>add</mat-icon>Követés</button>
-            }
-        }
-    </mat-card-header>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-        @for (post of posts; track $index) {
-            <mat-card appearance="raised" (click)="redirect(post.id)">
-                <mat-card-content class="posts">
-                    <span>{{post.title}}</span>
-                    <span>{{post.date | formDate}}</span>
-                </mat-card-content>
-            </mat-card>
-        }
-    </mat-card-content>
-</mat-card>

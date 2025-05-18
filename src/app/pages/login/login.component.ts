@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,9 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AuthService } from '../../shared/services/auth.service';
+import { Subscription } from 'rxjs';
 
-import {User} from '../../shared/models/User';
-import { ProfileObject } from '../../shared/constant';
 
 @Component({
   selector: 'app-login',
@@ -27,30 +27,56 @@ import { ProfileObject } from '../../shared/constant';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
-  loginError: boolean = false;
+  loginError: string = "";
+  authSubscription?: Subscription;
 
-  profiles = ProfileObject;
-
-  constructor(private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   login():void {
-    let siker = false;
+    if (this.loginForm.get("email")?.invalid) {
+      this.loginError = 'Kérlek adj meg egy valós e-mailt.';
+      return;
+    }
+    
+    if (this.loginForm.get("password")?.invalid) {
+      this.loginError = 'A jelszónak legalább 6 karakter hosszúnak kell lennie.';
+      return;
+    }
 
-    this.profiles.forEach(profile => {
-      if (profile.email == this.loginForm.get("email")?.value && profile.password == this.loginForm.get("password")?.value) {
-        siker = true;
-        localStorage.setItem('loggedInUser', String(profile.id));
+    const emailValue = this.loginForm.get("email")?.value || '';
+    const passwordValue = this.loginForm.get("password")?.value || '';
 
-        window.location.href = "/home";
-      }
-    });
+    this.authService.signIn(emailValue, passwordValue)
+      .then(userCredential => {
+        this.authService.updateLoginStatus(true);
+        this.router.navigateByUrl('/home');
+      })
+      .catch(error => {
+        console.error('Login error:', error);
+        
+        switch(error.code) {
+          case 'auth/user-not-found':
+            this.loginError = 'Nincs fiók ezzel az e-mail címmel';
+            break;
+          case 'auth/wrong-password':
+            this.loginError = 'Helytelen jelszó';
+            break;
+          case 'auth/invalid-credential':
+            this.loginError = 'Hibás e-mail vagy jelszó.';
+            break;
+          default:
+            this.loginError = 'Bejelentkezési hiba. Kérlek próbáld újra később.';
+        }
+      });
+  }
 
-    this.loginError = !siker;
+  ngOnDestroy() {
+    this.authSubscription?.unsubscribe();
   }
 }

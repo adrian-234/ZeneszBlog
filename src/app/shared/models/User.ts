@@ -1,8 +1,9 @@
 export interface User {
-    id: number;
+    id: string;
     name: string;
     email: string;
     password: string;
-    groups: number[]; //group ids
-    role: string | 'writer' | 'reader';
+    groups: string[];
+    group_count: number;
+    role: "reader" | "writer"; 
 }

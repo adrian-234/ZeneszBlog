@@ -12,8 +12,15 @@
     </mat-autocomplete>
 </form>
 
+@if (role == "writer"){
+    <button mat-flat-button (click)="openDialog()" id="center-btn"><mat-icon>add</mat-icon>Új kategória</button>
+}
+
 <mat-card class="main">
-    <mat-card-header>Követett kategóriák:</mat-card-header>
+    <mat-card-header>
+        <mat-card-title>Követett kategóriák:</mat-card-title>
+        
+    </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
         @if (isLoggedIn) {
@@ -26,6 +33,22 @@
             }
         } @else {
             <p>Jelentkezbe hogy lásd a követett kategóriáidat.</p>
+        }
+    </mat-card-content>
+</mat-card>
+
+<mat-card class="main" id="recomender">
+    <mat-card-header>
+        <mat-card-title>Ajánlott kategóriák:</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+        @for (group of topGroups; track $index) {
+            <mat-card appearance="raised" (click)="redirect(group.id)" >
+                <mat-card-content>
+                    {{group.name}}
+                </mat-card-content>
+            </mat-card>
         }
     </mat-card-content>
 </mat-card>

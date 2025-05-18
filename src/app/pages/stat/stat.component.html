@@ -1,0 +1,35 @@
+<h1>Statisztika</h1>
+
+<mat-card class="main">
+    <mat-card-content id="card-list">
+        <mat-card class="card-list-li">
+            <mat-card-header>Olvasók száma akik nem követnek egy kategóriát sem:</mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>{{nofollowCount}}</mat-card-content>
+        </mat-card>
+
+        <mat-card class="card-list-li">
+            <mat-card-header>Ezen a héten írt cikkek:</mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+                <ul>
+                    @for (post of newPosts; track $index) {
+                        <li>{{post.title}}</li>
+                    }
+                </ul>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="card-list-li">
+            <mat-card-header>A hét top 3 cikke(komment szám alpján):</mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+                <ul>
+                    @for (post of topPosts; track $index) {
+                        <li>{{post.title}}</li>
+                    }
+                </ul>
+            </mat-card-content>
+        </mat-card>
+    </mat-card-content>
+</mat-card>

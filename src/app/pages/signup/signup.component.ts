@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatCardModule} from '@angular/material/card';
 
 import {User} from '../../shared/models/User';
-import { ProfileObject } from '../../shared/constant';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -38,47 +38,62 @@ export class SignupComponent {
   });
   
   signupError = '';
-  success = false;
   showForm = true;
 
-  profiles = ProfileObject;
-
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   signup(): void {
     if (this.signUpForm.invalid) {
-      this.signupError = 'Hiba a megadott adatokban.';
+      this.signupError = 'Kérem javítsa ki hibákat a regisztráció előtt.';
       return;
     }
 
-    const password = this.signUpForm.get('password');
-    const rePassword = this.signUpForm.get('rePassword');
-
-    if (password?.value !== rePassword?.value) {
+    const password = this.signUpForm.get('password')?.value;
+    const rePassword = this.signUpForm.get('rePassword')?.value;
+    
+    if (password !== rePassword) {
+      this.signupError = 'Nem egyeznek a jelszavak.';
       return;
     }
 
-    let lastId: number = 1;
-    this.profiles.forEach(element => {
-      lastId = Number(element.id);
-    });
+    this.showForm = false;
 
-    const newUser: User = {
-      id: lastId++,
-      name: this.signUpForm.value.username || '',
+    const userData: Partial<User> = {
+      name: this.signUpForm.get('username')?.value || '',
       email: this.signUpForm.value.email || '',
-      password: this.signUpForm.value.password || '',
       groups: [],
-      role: "reader"
+      role: "reader",
     };
 
-    console.log('New user:', newUser);
+    const email = this.signUpForm.value.email || '';
+    const pw = this.signUpForm.value.password || '';
 
-    this.showForm = false
-    this.success = true;
-
-    setTimeout(() => {
-      this.router.navigateByUrl('/home');
-    }, 2000);
+    this.authService.signUp(email, pw, userData, )
+      .then(userCredential => {
+        console.log('Sikeres regisztrálás:', userCredential.user);
+        this.authService.updateLoginStatus(true);
+        this.router.navigateByUrl('/home');
+      })
+      .catch(error => {
+        console.error('Regisztrációs hiba:', error);
+        this.showForm = true;
+        
+        switch(error.code) {
+          case 'auth/email-already-in-use':
+            this.signupError = 'Az email már használatban van.';
+            break;
+          case 'auth/invalid-email':
+            this.signupError = 'Helytelen email.';
+            break;
+          case 'auth/weak-password':
+            this.signupError = 'A jelszónak legalább 6 karakter hosszúnak kell lennie.';
+            break;
+          default:
+            this.signupError = 'Ismeretlen hiba történt. Kérjük, próbálja újra később.';
+        }
+      });
   }
 }

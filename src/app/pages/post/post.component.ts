@@ -5,13 +5,17 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
 import { FormDatePipe } from '../../shared/pipes/form-date.pipe';
-
-
 import { Post } from '../../shared/models/Post';
-import { GroupObject, PostObject, ProfileObject } from '../../shared/constant';
 import { PostCommentComponent } from "./post-comment/post-comment.component";
+import { PostService } from '../../shared/services/post.service';
+import { from } from 'rxjs';
+import { UserService } from '../../shared/services/user.service';
+import { CommentService } from '../../shared/services/comment.service';
+import { Comment } from '../../shared/models/Comment';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-post',
@@ -22,50 +26,59 @@ import { PostCommentComponent } from "./post-comment/post-comment.component";
     MatExpansionModule,
     MatButtonModule,
     MatIconModule,
-    FormDatePipe
+    FormDatePipe,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
 ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })
 export class PostComponent implements OnInit{
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private postService: PostService, private userService: UserService, private commentService: CommentService) {}
 
-  post!: Post;
-  postAuthor!: String;
-  postCategory!: String;
+  post: Post | null = null;
+  postAuthor: String = "";
+  postCategory: String = "";
+
+  commentForm = new FormGroup({
+    commentText: new FormControl('', [Validators.required]),
+  });
 
   ngOnInit(): void {
-    const currentPostId = Number(this.route.snapshot.paramMap.get('postId'));
-      
-    PostObject.forEach(post => {
-      if (post.id == currentPostId) {
-        this.post = {
-          "id": post.id,
-          "title": post.title,
-          "text": post.text,
-          "author": post.author,
-          "comments": post.comments,
-          "date": post.date,
-        }
+    const currentPostId = String(this.route.snapshot.paramMap.get('postId'));
+    
+    from(this.postService.getPostById(currentPostId)).subscribe(post => {
+      if (post) {
+        this.post = post
 
-        ProfileObject.forEach(profile => {
-          if (profile.id == post.author) {
-            this.postAuthor = profile.name;
+        this.userService.getUserByUid(post.author).then(user => {
+          if (user) {
+            this.postAuthor = user.name;
           }
-        })
-
-        GroupObject.forEach(group => {
-          if (group.posts.includes(currentPostId)) {
-            this.postCategory = group.name;
-          };
-        })
+        });
+      } else {
+        this.post = null;
       }
     })
   }
 
 
   newComment() {
-    console.log("Új komment");
+    this.userService.getLoggedInUser().subscribe(user => {
+      if (this.post && user) {
+        var comment = this.commentForm.get("commentText")?.value;
+        if (comment == null || comment == "") {
+          return;
+        }
+        
+        const newComment: Partial<Comment> = {
+          writer: user.id,
+          text: comment,
+        }
+        this.commentService.addComment(this.post.id, newComment).then(() => window.location.reload());
+      }
+    })
   }
 }
 

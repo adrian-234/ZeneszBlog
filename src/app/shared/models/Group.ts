@@ -1,5 +1,6 @@
 export interface Group {
-    id: number;
+    id: string;
     name: string;
-    posts: number[];
+    posts: string[];
+    post_count: number;
 }

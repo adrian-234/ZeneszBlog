@@ -16,3 +16,15 @@
 #header #title {
     font-size: 28px;
 }
+
+#header button {
+    margin-right: 20px;
+    background-color: #F2BB05;
+    font-size: large;
+}
+
+#header > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

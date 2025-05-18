@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ZeneszBlog": {
+    "zeneszblog": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -42,7 +42,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "1000kB",
                   "maximumError": "1MB"
                 },
                 {
@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ZeneszBlog:build:production"
+              "buildTarget": "zeneszblog:build:production"
             },
             "development": {
-              "buildTarget": "ZeneszBlog:build:development"
+              "buildTarget": "zeneszblog:build:development"
             }
           },
           "defaultConfiguration": "development"

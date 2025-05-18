@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
@@ -7,10 +7,12 @@ import {AsyncPipe} from '@angular/common';
 import {map} from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
-
 import { Group } from '../../shared/models/Group';
-import {GroupObject} from '../../shared/constant';
-import { ProfileObject } from '../../shared/constant';
+import { GroupService } from '../../shared/services/group.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PopupComponent } from './popup/popup.component';
+import { MatButton } from '@angular/material/button';
+import { UserService } from '../../shared/services/user.service';
 
 
 @Component({
@@ -21,47 +23,46 @@ import { ProfileObject } from '../../shared/constant';
     ReactiveFormsModule,
     AsyncPipe,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    MatButton,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
+  constructor(private groupService: GroupService, private userService: UserService) {}
+
+  currentUserGroups: Group[] = [];
   GroupNames: string[] = [];
   filteredGroupNames!: Observable<string[]>;
+  topGroups: Group[] = [];
 
   searchBar = new FormControl('');
 
   isLoggedIn: boolean = false;
-  currentUserGroups: Group[] = [];
+  role: string = "reader";
 
   ngOnInit() {
-    this.isLoggedIn = localStorage.getItem("loggedInUser") != null;
+    this.isLoggedIn = localStorage.getItem("isLoggedIn") == "true";
+    this.groupService.getGroupsByCurrentUser().subscribe(groups => this.currentUserGroups.push(...groups));
 
-    if (this.isLoggedIn) {
-      for(let i = 0; i < ProfileObject.length; i++) {
-        if (ProfileObject[i].id == localStorage.getItem("loggedInUser")) {
-          ProfileObject[i].groups.forEach(groupId => {
-            for(let  x = 0; x < GroupObject.length; x++) {
-              if (GroupObject[x].id == groupId) {
-                this.currentUserGroups.push({
-                  'id': GroupObject[x].id,
-                  'name': GroupObject[x].name,
-                  'posts': GroupObject[x].posts
-                  }
-                )
-              }
-            }
-          });
-        }
+    this.userService.getCurrentUserRole().subscribe(role => {
+      if (role) {
+        this.role = role;
       }
-    }
+    })
 
-    this.GroupNames = GroupObject.map(group => group.name);
+
+    this.groupService.getAllGroups().subscribe(group => {
+      const tmpGroup = group.map(g => g.name);
+      this.GroupNames.push(...tmpGroup);
+    });
 
     this.filteredGroupNames = this.searchBar.valueChanges.pipe(
       map(value => this._filterGroupNames(value || ''))
     );
+
+    this.groupService.getTop().subscribe(data => this.topGroups = data);
   }
 
   private _filterGroupNames(value: string): string[] {
@@ -72,18 +73,31 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  redirect(dest: number) {
+  redirect(dest: string) {
     window.location.href = "group/" + dest;
   }
 
   redirectSearchBar() {
-
     if (this.searchBar.value != null) {
-      GroupObject.forEach(group => {
+      this.groupService.getAllGroups().subscribe(groups => groups.forEach(group => {
         if (group.name.toLowerCase() == this.searchBar.value?.toLocaleLowerCase()) {
           location.href = "group/" + group.id;
         }
-      })
+      }));
     }
+  }
+
+  readonly dialog = inject(MatDialog);
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(PopupComponent, {
+      data: {groupName: ""},
+    });
+
+    dialogRef.afterClosed().subscribe(groupName => {
+      if (groupName) {
+        this.groupService.addGroup(groupName).then(() => window.location.reload());
+      }
+    });
   }
 }

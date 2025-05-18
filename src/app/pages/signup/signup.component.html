@@ -36,11 +36,11 @@
         </form>
     }
 
-    @if (success) {
-        <h2>Sikeres Regisztrálás!</h2>
+    @if (!showForm) {
         <div class="loading-container">
+            <h2>Regisztrálás folyamatban</h2>
             <mat-spinner diameter="50"></mat-spinner>
-            <p>Átirányítás folyamatban...</p>
+            <p>Kérem várjon...</p>
         </div>
     }
 </div>

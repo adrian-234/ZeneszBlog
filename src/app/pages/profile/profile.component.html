@@ -1,34 +1,20 @@
 <h1>Profilom</h1>
 
 <mat-card class="main">
-    @if (isLoggedIn) {
+    @if (user != null) {
         <mat-card-content>
-            <form [formGroup]="updateForm" (ngSubmit)="update()" class="profile-info-form">  
+            <form [formGroup]="updateForm" class="profile-info-form">  
                 <mat-form-field appearance="outline">
                     <mat-label>Felhasználó név</mat-label>
-                    <input matInput formControlName="username" [(ngModel)]="currentUser.name">
+                    <input matInput formControlName="username" [(ngModel)]="user.name" readonly="">
                     <mat-icon matSuffix>person</mat-icon>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Email</mat-label>
-                    <input matInput formControlName="email" [(ngModel)]="currentUser.email">
+                    <input matInput formControlName="email" [(ngModel)]="user.email" readonly="">
                     <mat-icon matSuffix>mail</mat-icon>
                 </mat-form-field>
-            
-                <mat-form-field appearance="outline">
-                    <mat-label>Új jelszó</mat-label>
-                    <input matInput type="password" formControlName="Npassword">
-                    <mat-icon matSuffix>lock</mat-icon>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Jelenlegi jelszó</mat-label>
-                    <input matInput type="password" formControlName="password">
-                    <mat-icon matSuffix>lock</mat-icon>
-                </mat-form-field>
-
-                <button mat-flat-button>Módosítások Mentése</button>
             </form>
 
             <button mat-stroked-button (click)="logOut()" class="logoutBtn">Kijelentkezés</button>

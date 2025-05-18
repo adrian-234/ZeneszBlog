@@ -3,9 +3,9 @@ import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
 
 
-
-import { CommentObject, ProfileObject } from '../../../shared/constant';
 import { Comment } from '../../../shared/models/Comment';
+import { CommentService } from '../../../shared/services/comment.service';
+import { UserService } from '../../../shared/services/user.service';
 
 @Component({
   selector: 'app-post-comment',
@@ -17,32 +17,28 @@ import { Comment } from '../../../shared/models/Comment';
   styleUrl: './post-comment.component.scss'
 })
 export class PostCommentComponent implements OnInit{
-  @Input() postCommentIds!: number[];
+  constructor(private commentService: CommentService, private userService: UserService) {}
 
-  comments: Comment[] = []; 
+  @Input() postCommentIds: string[] = [];
 
-  ngOnInit(): void {
-      this.postCommentIds.forEach(id => {
-        CommentObject.forEach(comment => {
-          if (comment.id == id) {
-            this.comments.push(
-              {
-                'id': id,
-                'text': comment.text,
-                'author': comment.author
-              }
-            )
-          }
-        })
-      })
+  comments: Comment[] = [];
+  writer: String = "";
+
+  ngOnInit() {
+    this.loadData();
   }
 
-  getUserById(id: number) {
-    for(let i = 0; i < ProfileObject.length; i++) {
-      if (ProfileObject[i].id == id) {
-        return ProfileObject[i].name
-      }
-    }
-    return "Nem létezik ilyen felhasználó már :("
+  private async loadData() {
+    (await this.commentService.getCommentsByIds(this.postCommentIds)).subscribe(comments => {
+      comments.forEach(comment => {
+        this.userService.getUserByUid(comment.writer).then(user => {
+          if (user) {
+            comment.writer = user.name;
+
+            this.comments.push(comment);
+          }
+        });
+      })
+    });
   }
 }

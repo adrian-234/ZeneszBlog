@@ -1,7 +1,12 @@
 <mat-toolbar id="header">
     <a routerLink="/home" id="title">Zene sarok</a>
     @if (isLoggedIn) {
-        <a routerLink="/profile"><mat-icon>account_circle</mat-icon></a>
+      <div>
+        @if (role == "writer") {
+          <button mat-flat-button routerLink="/stat">Statisztika</button>
+        }
+        <a routerLink="/profile"><mat-icon style="transform: scale(2);">account_circle</mat-icon></a>
+      </div>
     }
       
     @if (!isLoggedIn) {

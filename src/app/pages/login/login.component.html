@@ -15,9 +15,7 @@
                 <mat-icon matSuffix>lock</mat-icon>
             </mat-form-field>
 
-            @if (loginError) {
-                <p class="error">Hibás jelszó vagy email.</p>
-            }
+            <p class="error">{{loginError}}</p>
     
             <div class="buttons-row">
                 <button mat-flat-button color="primary" type="submit">Belépés</button>

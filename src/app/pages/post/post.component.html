@@ -2,14 +2,20 @@
 
 <mat-card class="main">
     <mat-card-header>
-        <h2>{{post.title}}</h2>
+        <h2>{{post?.title}}</h2>
         <h4>Írta: {{postAuthor}}</h4>
-        <h4>{{post.date | formDate}}</h4>
+        <h4>
+          @if (post) {
+            {{post.date | formDate}}
+          } @else {
+            {{"Hiba"}}
+          }
+      </h4>
         
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
-       {{post.text}}
+       {{post?.text}}
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-content>
@@ -17,8 +23,18 @@
             <mat-expansion-panel-header>
               <mat-panel-title>Kommentek</mat-panel-title>
             </mat-expansion-panel-header>
-            <button mat-flat-button id="newCommentBtn" (click)="newComment()"><mat-icon >add</mat-icon>Új komment</button>
-            <app-post-comment [postCommentIds]="post.comments"></app-post-comment>
+            <form [formGroup]="commentForm" (ngSubmit)="newComment()" id="newComment">
+              <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="commentText" placeholder="Új komment">
+                <mat-icon matSuffix>email</mat-icon>
+              </mat-form-field>
+              <button mat-flat-button id="newCommentBtn"><mat-icon >add</mat-icon>Új komment</button>
+            </form>
+            @if (post) {
+              <app-post-comment [postCommentIds]="post.comments"></app-post-comment>
+            } @else {
+              <app-post-comment [postCommentIds]="[]"></app-post-comment>
+            }
           </mat-expansion-panel>
     </mat-card-content>
 </mat-card>

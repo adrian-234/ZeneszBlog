@@ -1,0 +1,20 @@
+h1 {
+    margin: 50px auto;
+    width: fit-content;
+}
+
+.new-post-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.new-post-form button {
+    width: fit-content;
+    padding: 10px 40px;
+
+    margin: auto;
+}
+
+input, textarea, mat-label, mat-icon{
+    color: #474448 !important;
+}

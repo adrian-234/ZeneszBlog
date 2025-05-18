@@ -1,6 +1,6 @@
 @for(comment of comments; track $index) {
     <mat-card>
-        <mat-card-header>{{getUserById(comment.author)}}</mat-card-header>
+        <mat-card-header>{{comment.writer}}</mat-card-header>
         <mat-divider></mat-divider>
         <mat-card-content>{{comment.text}}</mat-card-content>
     </mat-card>

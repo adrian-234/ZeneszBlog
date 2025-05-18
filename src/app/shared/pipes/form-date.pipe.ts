@@ -13,31 +13,31 @@ export class FormDatePipe implements PipeTransform {
     res += tmp[0];
 
     switch(tmp[1]) {
-      case "1":
+      case "01":
         res += ". Január. ";
         break;
-      case "2":
+      case "02":
         res += ". Február. ";
         break;
-      case "3":
+      case "03":
         res += ". Március. ";
         break;
-      case "4":
+      case "04":
         res += ". Április. ";
         break;
-      case "5":
+      case "05":
         res += ". Május. ";
         break;
-      case "6":
+      case "06":
         res += ". Június. ";
         break;
-      case "7":
+      case "07":
           res += ". Július. ";
           break;
-      case "8":
+      case "08":
           res += ". Augusztus. ";
           break;
-      case "9":
+      case "09":
         res += ". Szeptember. ";
         break;
       case "10":
@@ -48,6 +48,9 @@ export class FormDatePipe implements PipeTransform {
         break;
       case "12":
         res += ". December. ";
+        break;
+      default:
+        res += ". Hibás hónap ."
     }
     res += tmp[2] + ".";
 

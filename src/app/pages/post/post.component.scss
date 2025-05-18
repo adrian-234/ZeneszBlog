@@ -37,5 +37,20 @@ mat-expansion-panel {
 
 mat-panel-title {
     color: black !important;
+}
 
+input, mat-label, mat-icon{
+    color: #474448 !important;
+}
+
+#newComment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#newComment mat-form-field {
+    width: min(100%, 600px);
 }

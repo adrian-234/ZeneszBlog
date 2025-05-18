@@ -1,0 +1,19 @@
+<h1>Új cikk írása</h1>
+    
+<mat-card class="main">
+    <mat-card-content>
+        <form [formGroup]="newPostForm" (ngSubmit)="save()" class="new-post-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Cím</mat-label>
+                <input matInput formControlName="title">
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline">
+                <mat-label>Szöveg</mat-label>
+                <textarea matInput formControlName="text"></textarea>
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" type="submit">Mentés</button>
+        </form>
+    </mat-card-content>
+</mat-card>
